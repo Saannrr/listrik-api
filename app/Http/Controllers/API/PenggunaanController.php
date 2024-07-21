@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Penggunaan;
 use Illuminate\Http\Request;
 
 class PenggunaanController extends Controller
@@ -12,7 +13,7 @@ class PenggunaanController extends Controller
      */
     public function index()
     {
-        //
+        return Penggunaan::all();
     }
 
     /**
@@ -20,7 +21,17 @@ class PenggunaanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+           'id_pelanggan' => 'required|exists:pelanggan,id_pelanggan',
+            'bulan' => 'required',
+            'tahun' => 'required',
+            'meter_awal' => 'required',
+            'meter_akhir' => 'required',
+        ]);
+
+        $penggunaan = Penggunaan::create($request->all());
+
+        return response()->json($penggunaan, 201);
     }
 
     /**
@@ -28,7 +39,7 @@ class PenggunaanController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Penggunaan::findOrFail($id);
     }
 
     /**
@@ -36,7 +47,19 @@ class PenggunaanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $penggunaan = Penggunaan::findOrFail($id);
+
+        $request->validate([
+           'id_pelanggan' => 'required|exists:pelanggan,id_pelanggan',
+           'bulan' => 'required',
+           'tahun' => 'required',
+           'meter_awal' => 'required',
+           'meter_akhir' => 'required',
+        ]);
+
+        $penggunaan->update($request->all());
+
+        return response()->json($penggunaan, 200);
     }
 
     /**
@@ -44,6 +67,7 @@ class PenggunaanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Penggunaan::destroy($id);
+        return response()->json(null, 204);
     }
 }

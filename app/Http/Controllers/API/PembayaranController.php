@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
@@ -12,7 +13,7 @@ class PembayaranController extends Controller
      */
     public function index()
     {
-        //
+        return Pembayaran::all();
     }
 
     /**
@@ -20,7 +21,19 @@ class PembayaranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+           'id_tagihan' => 'required|exists:tagihan,id_tagihan',
+           'id_pelanggan' => 'required|exists:pelanggan,id_pelanggan',
+           'tanggal_pembayaran' => 'required|date',
+           'bulan_bayar' => 'required',
+           'biaya_admin' => 'required',
+           'total_bayar' => 'required',
+           'id_user' => 'required|exists:users,id_user',
+        ]);
+
+        $pembayaran = Pembayaran::create($request->all());
+
+        return response()->json($pembayaran, 201);
     }
 
     /**
@@ -28,7 +41,7 @@ class PembayaranController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Pembayaran::findOrFail($id);
     }
 
     /**
@@ -36,7 +49,21 @@ class PembayaranController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $pembayaran = Pembayaran::findOrFail($id);
+
+        $request->validate([
+            'id_tagihan' => 'required|exists:tagihan,id_tagihan',
+            'id_pelanggan' => 'required|exists:pelanggan,id_pelanggan',
+            'tanggal_pembayaran' => 'required|date',
+            'bulan_bayar' => 'required',
+            'biaya_admin' => 'required',
+            'total_bayar' => 'required',
+            'id_user' => 'required|exists:users,id_user',
+        ]);
+
+        $pembayaran->update($request->all());
+
+        return response()->json($pembayaran, 200);
     }
 
     /**
@@ -44,6 +71,7 @@ class PembayaranController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Pembayaran::destroy($id);
+        return response()->json(null, 204);
     }
 }

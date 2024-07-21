@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tarif;
 use Illuminate\Http\Request;
 
 class TarifController extends Controller
@@ -12,7 +13,7 @@ class TarifController extends Controller
      */
     public function index()
     {
-        //
+        return Tarif::all();
     }
 
     /**
@@ -20,7 +21,14 @@ class TarifController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+           'daya' => 'required',
+           'tarifperkwh' => 'required'
+        ]);
+
+        $tarif = Tarif::create($request->all());
+
+        return response()->json($tarif, 201);
     }
 
     /**
@@ -28,7 +36,7 @@ class TarifController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Tarif::findOrFail($id);
     }
 
     /**
@@ -36,7 +44,16 @@ class TarifController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $tarif = Tarif::findOrFail($id);
+
+        $request->validate([
+           'daya' => 'required',
+           'tarifperkwh' => 'required',
+        ]);
+
+        $tarif->update($request->all());
+
+        return response()->json($tarif, 200);
     }
 
     /**
@@ -44,6 +61,8 @@ class TarifController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Tarif::destroy($id);
+
+        return response()->json(null, 204);
     }
 }

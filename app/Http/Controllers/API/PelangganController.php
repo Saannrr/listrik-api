@@ -89,8 +89,7 @@ class PelangganController extends Controller
      */
     public function destroy(string $id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan = delete();
+        Pelanggan::destroy($id);
 
         return response()->json(null, 204);
     }

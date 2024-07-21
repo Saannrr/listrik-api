@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Level;
 use Illuminate\Http\Request;
 
 class LevelController extends Controller
@@ -12,7 +13,7 @@ class LevelController extends Controller
      */
     public function index()
     {
-        //
+        return Level::all();
     }
 
     /**
@@ -20,7 +21,13 @@ class LevelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+           'nama_level' => 'required'
+        ]);
+
+        $level = Level::create($request->all());
+
+        return response()->json($level, 201);
     }
 
     /**
@@ -28,7 +35,7 @@ class LevelController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Level::findOrFail($id);
     }
 
     /**
@@ -36,7 +43,15 @@ class LevelController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $level = Level::findOrFail($id);
+
+        $request->validate([
+           'nama_level' => 'required',
+        ]);
+
+        $level->update($request->all());
+
+        return response()->json($level, 200);
     }
 
     /**
@@ -44,6 +59,7 @@ class LevelController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Level::destroy($id);
+        return response()->json(null, 204);
     }
 }
