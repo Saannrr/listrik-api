@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PelangganResource;
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,8 @@ class PelangganController extends Controller
      */
     public function index()
     {
-        return Pelanggan::all();
+        $pelanggan = Pelanggan::all();
+        return PelangganResource::collection($pelanggan->loadMissing('tarif:id_tarif,daya,tarifperkwh'));
     }
 
     /**
